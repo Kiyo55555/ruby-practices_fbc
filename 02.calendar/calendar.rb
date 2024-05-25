@@ -8,8 +8,6 @@ opt.on('-m month') {|v| v }
 opt.on('-y year') {|v| v }
 opt.parse!(ARGV, into: params)
 
-
-
 tday= Date.today
 week = ["日","月","火","水","木","金","土"]
 
@@ -38,7 +36,6 @@ m_end_day =Date.new(stdday.strftime('%Y').to_i,stdday.strftime('%m').to_i,-1).st
 #月の1日の曜日（数字）日曜だったら0にする（これを元に月初の日付の位置を合わせるため）
 first_weekn = stdday.strftime('%u').to_i == 7 ? 0 : stdday.strftime('%u').to_i
 
-puts params[:m].slice(/0/)
 
 puts year_mon.unshift("    ").join(" ")
 puts week.join(" ")
@@ -93,50 +90,3 @@ else
 	end
 end
 puts #空白
-
-# s.each do |n|
-	
-# 	puts n
-# 	if n != "sat"
-# 		puts " "
-# 	end
-# end
-
-# tday= Date.today
-# a.strftime('%a')
-# a.strftime('%m').to_i
-# a.strftime('%u').to_i //曜日の番号
-# a.strftime('%Y').to_i
-
-
-
-
-
-# 今日の
-# 年をチェック
-# 月をチェック
-# 月の日数をチェック
-# 月の最初の日の曜日をチェック
-
-# 曜日のところまでスペースを打って、
-# そこから数字1~月末まで数字を打つ
-# 一桁台は真ん中、二桁は真ん中から
-
-
-
-# 一週間を横に並べる
-
-
-# mon tue wed thr fri sat sun
-#  1   2   3   4   5   6   7 
-#  9   10  11  12  13  14  15
-
-
-# monthをチェック
-
-# 日  月  火  水  木  金  土
-# 1   2  3   4   5  6   7
-
-
-# 日 月 火 水 木 金 土
-# 1  2  3
