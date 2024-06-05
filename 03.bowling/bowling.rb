@@ -1,58 +1,47 @@
 # frozen_string_literal: true
 
-# 提出用
-
 param = ARGV.map { |n| n.split(',') }
-scor_arr = param[0]
+score_array = param[0]
 
-# 文字列から数字へ , ストライクは 10,nilとする。(10投目だけ10,nilではなくただの10)
-x = []
-scor_arr.each do |d|
-  if x.length < 18
-    if d == 'X'
-      x << 10
-      x << nil
-    else
-      x << d.to_i
-    end
+fix_strike = []
+score_array.each do |score|
+  if score == 'X'
+    fix_strike << 10
+    fix_strike << 0 if fix_strike.length < 18 # 10フレーム目はストライクでも3投できるため、0は追加しない。
   else
-    x << if d == 'X'
-           10
-         else
-           d.to_i
-         end
+    fix_strike << score.to_i
   end
 end
 
-# 二次元配列に収める　10フレーム目の最後があれば追加
+# 二次元配列に収める
 frames = []
-x.each_slice(2) do |s|
+x.each_slice(2) do |frame|
   if frames.length <= 9
-    frames << s
+    frames << frame
   else
-    frames[9] << s[0]
+    frames[9] << frame[0]
   end
 end
 
-# スコア計算
 total = 0
-f_score = 0
-frames.each_with_index do |n, idx|
-  f_score = if idx < 9	# 10フレーム目の前と後で分ける
-              if n[0] == 10 # ストライクの場合
-                if frames[idx + 1][0] == 10 # 次もストライクだったら、次の次のフレームを参照するする必要があるため
-                  10 + 10 + (frames[idx + 1][1] || frames[idx + 2][0]) # もし9フレーム目なら10フレーム目から（同じフレームから）２投を参照する要があるため
-                else
-                  10 + frames[idx + 1][0] + frames[idx + 1][1]
+extra_score = 0
+frames.each_with_index do |frame, i|
+  total += frame.sum
+  next if frame.sum != 10 || i >= 9
+
+  extra_score = if frame[0] == 10                    # ストライクの場合
+                  if frames[i + 1][0] == 10          # 次もストライクだったら、２つ先までのフレームを参照するため
+                    if i != 8
+                      10 + frames[i + 2][0]
+                    else
+                      10 + frames[i + 1][1]
+                    end
+                  else
+                    frames[i + 1][0] + frames[i + 1][1] # sumは9フレーム目の場合に３投分加算されるので使わない
+                  end
+                else                                 # スペアの場合
+                  frames[i + 1][0]
                 end
-              elsif n.sum == 10	# スペアの場合
-                10 + frames[idx + 1][0]
-              else	# 普通の時
-                n.sum
-              end
-            else
-              n.sum
-            end
-  total += f_score
+  total += extra_score
 end
 p total
