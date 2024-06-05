@@ -1,5 +1,4 @@
 #!/usr/bin/env ruby
-
 require 'date'
 require 'optparse'
 
@@ -27,22 +26,20 @@ calendar_label << first_day.year
 puts calendar_label.unshift("     ").join(" ")
 puts WEEKDAY_CHARACTERS_JA.join(" ")
 
-days_in_week = []
-first_weekn = first_day.wday.to_i
-first_weekn.times {days_in_week << "  "}
+one_week = []
+first_day.wday.to_i.times {one_week << "  "}
 
 (first_day..last_day).each do |date| 
-		day = date.day.to_s
-		day = day.rjust(2)
+		day = date.day.to_s.rjust(2)
 
 		if date == today
-			days_in_week << "\e[7m#{day}\e[0m"	
+			one_week << "\e[7m#{day}\e[0m"	
 		else
-			days_in_week << day
+			one_week << day
 		end
-		if days_in_week.length == 7 || date == last_day
-			puts days_in_week.join(" ")
-			days_in_week = []
+		if one_week.length == 7 || date == last_day
+			puts one_week.join(" ")
+			one_week = []
 		end
 end
 puts 
