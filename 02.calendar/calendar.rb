@@ -1,58 +1,48 @@
-#!/usr/bin/env rub
+#!/usr/bin/env ruby
 
 require 'date'
 require 'optparse'
 
-opt = OptionParser.new
+options = OptionParser.new
 
 params = {}
-opt.on('-m month') {|v| v }
-opt.on('-y year') {|v| v }
-opt.parse!(ARGV, into: params)
+options.on('-m month') {|v| v }
+options.on('-y year') {|v| v }
+options.parse!(ARGV, into: params)
 
-today= Date.today
-week = ["日","月","火","水","木","金","土"]
+today = Date.today
+WEEKDAY_CHARACTERS_JA = ["日","月","火","水","木","金","土"]
 
-if params[:y].nil?
-	params[:y] = today.year
-end
-if params[:m].nil?
-	params[:m] = today.month
-end
+year = params[:y] || today.year
+month = params[:m] || today.month
 
-firstday = Date.new(params[:y].to_i,params[:m].to_i,1)
-endday =Date.new(firstday.year.to_i, firstday.month.to_i, -1)
+first_day = Date.new(year.to_i, month.to_i, 1)
+last_day =Date.new(first_day.year.to_i, first_day.month.to_i, -1)
 
 
-#トップに表示する年と月
-year_mon= []
-year_mon << "#{firstday.month.to_s}月" 
-year_mon << firstday.year
+calendar_label= []
+calendar_label << "#{first_day.month.to_s}月" 
+calendar_label << first_day.year
 
-puts year_mon.unshift("     ").join(" ")
-puts week.join(" ")
+puts calendar_label.unshift("     ").join(" ")
+puts WEEKDAY_CHARACTERS_JA.join(" ")
 
+days_in_week = []
+first_weekn = first_day.wday.to_i
+first_weekn.times {days_in_week << "  "}
 
-#以下、日付の記述の処理
-#lineに7日分ずつ追加してプリントする
-line = []
-
-#月の1日の曜日（数字）日曜だったら0にする（月初の日付の位置を合わせるため）
-first_weekn = firstday.cwday.to_i == 7 ? 0 : firstday.cwday.to_i
-first_weekn.times {line << "　"} 
-
-(firstday..endday).each do |date| 
+(first_day..last_day).each do |date| 
 		day = date.day.to_s
-		day = day.rjust(2) if day.length == 1
+		day = day.rjust(2)
 
 		if date == today
-			line << "\e[7m#{day}\e[0m"	
+			days_in_week << "\e[7m#{day}\e[0m"	
 		else
-			line << day
+			days_in_week << day
 		end
-		if line.length == 7 || date == endday
-			puts line.join(" ")
-			line = []
+		if days_in_week.length == 7 || date == last_day
+			puts days_in_week.join(" ")
+			days_in_week = []
 		end
 end
-puts #空白
+puts 
