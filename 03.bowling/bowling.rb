@@ -15,7 +15,7 @@ end
 
 # 二次元配列に収める
 frames = []
-x.each_slice(2) do |frame|
+fix_strike.each_slice(2) do |frame|
   if frames.length <= 9
     frames << frame
   else
