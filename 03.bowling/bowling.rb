@@ -1,27 +1,29 @@
 # frozen_string_literal: true
 
-param = ARGV.map { |n| n.split(',') }
-score_array = param[0]
+arguments = ARGV.map { |n| n.split(',') }
+scores = arguments[0]
 
-fix_strike = []
-score_array.each do |score|
+
+strike_changed_scores = []
+scores.each do |score|
   if score == 'X'
-    fix_strike << 10
-    fix_strike << 0 if fix_strike.length < 18 # 10フレーム目はストライクでも3投できるため、0は追加しない。
+    strike_changed_scores << 10
+    strike_changed_scores << 0 if strike_changed_scores.length < 18 # 10フレーム目はストライクでも3投できるため、0は追加しない。
   else
-    fix_strike << score.to_i
+    strike_changed_scores << score.to_i
   end
 end
 
-# 二次元配列に収める
+
 frames = []
-fix_strike.each_slice(2) do |frame|
+strike_changed_scores.each_slice(2) do |frame|
   if frames.length <= 9
     frames << frame
   else
     frames[9] << frame[0]
   end
 end
+
 
 total = 0
 extra_score = 0
