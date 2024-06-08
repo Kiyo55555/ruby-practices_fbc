@@ -29,16 +29,15 @@ one_week = []
 first_day.wday.times {one_week << "  "}
 
 (first_day..last_day).each do |date| 
-		day = date.day.to_s.rjust(2)
-
-		if date == today
-			one_week << "\e[7m#{day}\e[0m"	
-		else
-			one_week << day
-		end
-		if one_week.length == 7 || date == last_day
-			puts one_week.join(" ")
-			one_week = []
-		end
+  day = date.day.to_s.rjust(2)
+  if date == today
+	  one_week << "\e[7m#{day}\e[0m"	
+  else
+    one_week << day
+  end
+  if one_week.length == 7 || date == last_day
+    puts one_week.join(" ")
+    one_week = []
+  end
 end
 puts 
