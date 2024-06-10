@@ -2,18 +2,18 @@
 require 'date'
 require 'optparse'
 
-options = OptionParser.new
+opt = OptionParser.new
 
-params = {}
-options.on('-m month')
-options.on('-y year')
-options.parse!(ARGV, into: params)
+options = {}
+opt.on('-m month')
+opt.on('-y year')
+opt.parse!(ARGV, into: )
 
 today = Date.today
 WEEKDAY_CHARACTERS_JA = ["日","月","火","水","木","金","土"]
 
-year = params[:y] || today.year
-month = params[:m] || today.month
+year = options[:y] || today.year
+month = options[:m] || today.month
 
 first_day = Date.new(year, month, 1)
 last_day =Date.new(first_day.year, first_day.month, -1)
